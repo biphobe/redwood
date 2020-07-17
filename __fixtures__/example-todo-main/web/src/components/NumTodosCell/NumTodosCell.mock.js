@@ -1,3 +1,3 @@
-export const standard = {
+export const standard = mockCellData({
   todosCount: 42,
-}
+})

@@ -17,7 +17,7 @@ export default function ({ types: t }: { types: typeof types }): PluginObj {
         // Rules:
         // 0. Must be a *.mock.[ts,js] file.
         // 1. That has a named export called "standard".
-        // 2. (removed) That calls "mockCellData".
+        // 2. That calls "mockCellData".
         // 3. That are adjacent to a Cell.
         // 4. The Cell has a operation name for the QUERY export.
 
@@ -34,10 +34,10 @@ export default function ({ types: t }: { types: typeof types }): PluginObj {
         }
 
         const init = vd?.init as types.CallExpression
-        // const calleeName = (init?.callee as types.Identifier)?.name
-        // if (calleeName !== 'mockCellData') {
-        //   return
-        // }
+        const calleeName = (init?.callee as types.Identifier)?.name
+        if (calleeName !== 'mockCellData') {
+          return
+        }
 
         // Find the model of the Cell that is in the same directory.
         const filename = state.file.opts.filename
