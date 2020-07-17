@@ -17,7 +17,7 @@ export default function ({ types: t }: { types: typeof types }): PluginObj {
         // Rules:
         // 0. Must be a *.mock.[ts,js] file.
         // 1. That has a named export called "standard".
-        // 2. That calls "mockCellData".
+        // 2. (removed) That calls "mockCellData".
         // 3. That are adjacent to a Cell.
         // 4. The Cell has a operation name for the QUERY export.
 
@@ -34,10 +34,10 @@ export default function ({ types: t }: { types: typeof types }): PluginObj {
         }
 
         const init = vd?.init as types.CallExpression
-        const calleeName = (init?.callee as types.Identifier)?.name
-        if (calleeName !== 'mockCellData') {
-          return
-        }
+        // const calleeName = (init?.callee as types.Identifier)?.name
+        // if (calleeName !== 'mockCellData') {
+        //   return
+        // }
 
         // Find the model of the Cell that is in the same directory.
         const filename = state.file.opts.filename
@@ -87,24 +87,7 @@ export default function ({ types: t }: { types: typeof types }): PluginObj {
         } else {
           p.replaceWith(exportStandard(mockGraphQLCall))
         }
-
-        // - export const standard = mockData(<data>)
-        // p.remove()
       },
-      // CallExpression(p, state: { file?: any }) {
-      //   if ((p.node.callee as types.Identifier)?.name !== 'getMockData') {
-      //     return
-      //   }
-      //   const dirName = cleanFileName(state.file.opts.filename)
-      //   const key = (p.node.arguments[0] as types.StringLiteral)?.value
-      //   // - getMockData(<key>)
-      //   // + __RW__AUTO_getMockData(`${dirName}:${exportName}`)
-      //   p.replaceWith(
-      //     t.callExpression(t.identifier('__RW__getMockData'), [
-      //       t.stringLiteral(dirName + ':' + key),
-      //     ])
-      //   )
-      // },
     },
   }
 }
