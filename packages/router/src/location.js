@@ -8,12 +8,27 @@ const LocationProvider = ({ location = window.location, children }) => {
     return { pathname, search, hash }
   }, [location])
 
-  const [context, setContext] = React.useState(getContext())
+  const [context, setContext] = React.useState({
+    ...getContext(),
+    previousPage: null
+  });
+
+  let previousPage = context.previousPage;
 
   React.useEffect(() => {
     let isMounted = true
+
     gHistory.listen(() => {
-      if (isMounted) setContext(() => getContext())
+      if (isMounted) setContext(() => {
+        const context = getContext();
+        const newContext = { ...context, previousPage }
+
+        previousPage = context.pathname;
+
+        return {
+          context: newContext
+        };
+      })
     })
     return () => {
       isMounted = false
